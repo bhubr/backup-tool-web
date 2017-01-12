@@ -30,13 +30,12 @@ class CreateFilesMigration extends Migration
          $this->schema->create('files', function(Illuminate\Database\Schema\Blueprint $table){
             // Auto-increment id
             $table->increments('id');
-            // $table->integer('parent_id');
             $table->string('name');
             $table->enum('type', ['F', 'D']);
+            $table->timestamps();
         });
         $files = $this->table('files');
         $files->addColumn('parent_id', 'integer', array('null' => true));
-        // $files->addForeignKey('parent_id', 'files', 'id', array('delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'));
         $files->addColumn('md5', 'string', array('limit' => 32))
             ->save();
     }

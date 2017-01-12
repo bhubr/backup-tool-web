@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace bhubr\HashBack\Model;
 use Illuminate\Database\Eloquent\Model;
 
 class File extends Model {

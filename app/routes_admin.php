@@ -28,11 +28,13 @@ $app->get('/admin/{plural}', function (Request $request, Response $response, $ar
     $name = $request->getAttribute('csrf_name');
     $value = $request->getAttribute('csrf_value');
 
-    $plural = $args['plural'];
     $models = ['users', 'hosts', 'volumes', 'files'];
+    $plural = $args['plural'];
+    $singular = Inflector::singularize($plural);
+    $modelClass = 'bhubr\\HashBack\\Model\\' . ucfirst($singular);
     // if( !in_array($args['what'], $authorizedModels))
     // $models = array_map( function($plural) {
-    //     $plural = Inflector::pluralize($model);
+    //     $plural = 
     //     return [
     //         'plural' => $plural,
     //         'labelPlural' => ucfirst($plural)
@@ -60,7 +62,7 @@ $app->get('/admin/{plural}', function (Request $request, Response $response, $ar
         return;
     }
 
-    $entries = EloquentUser::all();
+    $entries = $modelClass::all();
 
     // echo 'Welcome to the admin page.';
     $app->getContainer()->view->render($response, 'admin/tables.twig', [
