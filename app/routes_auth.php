@@ -1,6 +1,8 @@
 <?php
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+// use Cartalyst\Sentinel\Sentinel;
+use Cartalyst\Sentinel\Users\EloquentUser;
 
 // Middleware that forces Eloquent to be loaded
 $app->add( function($request, $response, $next) use($app) {
@@ -37,13 +39,18 @@ $app->post('/login', function (Request $request, Response $response, $args) use 
                 'password' => $data['password'],
             ], $remember)) {
 
-            echo 'Invalid email or password.';
+            // echo 'Invalid email or password.'; return;
+            return $response->withStatus(403)->withJson([ 'success' => false, 'error' => 'Invalid email or password.' ]);
 
-            return;
+            // return;
         } else {
-            echo 'You\'re logged in';
-
-            return;
+            try {
+                $user = EloquentUser::where('email', '=', $data['email'])->first();
+                // Sentinel::findByCredentials($data['email']);
+                return $response->withJson([ 'success'=>true, 'user' => json_encode($user) ]);
+            } catch(\Exception $e) {
+                return $Response->withStatus(500)->withJson([ 'success' => false, 'error' => $e->getMessage() ]);
+            }
         }
     } catch (Cartalyst\Sentinel\Checkpoints\ThrottlingException $ex) {
         echo "Too many attempts!";
