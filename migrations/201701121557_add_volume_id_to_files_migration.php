@@ -2,7 +2,7 @@
 
 use \bhubr\HashBack\Migration\Migration;
 
-class AddHostIdToVolumesMigration extends Migration
+class AddVolumeIdToFilesMigration extends Migration
 {
     /**
      * Change Method.
@@ -27,14 +27,15 @@ class AddHostIdToVolumesMigration extends Migration
      */
     public function up()
     {
-        $volumes = $this->table('volumes');
-        $volumes->addColumn('host_id', 'integer')
+        $files = $this->table('files');
+        $files->addColumn('volume_id', 'integer')
+            // ->addForeignKey('volume_id', 'files', 'id')
             ->save();
     }
 
     public function down()
     {
-        $volumes = $this->table('volumes');
-        $volumes->dropColumn('host_id');
+        $files = $this->table('files');
+        $files->dropColumn('volume_id');
     }
 }

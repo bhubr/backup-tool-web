@@ -46,10 +46,21 @@ $app->post('/login', function (Request $request, Response $response, $args) use 
         } else {
             try {
                 $user = EloquentUser::where('email', '=', $data['email'])->first();
-                // Sentinel::findByCredentials($data['email']);
-                return $response->withJson([ 'success'=>true, 'user' => json_encode($user) ]);
+                $payload = [
+                    'success' => true,
+                    'user' => json_encode($user),
+                    'ip'  => $_SERVER['REMOTE_ADDR'],
+                    'mp'  => $data['mount_point']
+                ];
+                if(array_key_exists('mount_point', $data)) {
+                    $volume = bhubr\HashBack\Model\Volume::where('mount_point', '=', $data['mount_point'])->first();
+                    $_SESSION['volume_id'] = $volume->id;
+                    $payload['volume'] = $volume;
+                }
+
+                return $response->withJson($payload);
             } catch(\Exception $e) {
-                return $Response->withStatus(500)->withJson([ 'success' => false, 'error' => $e->getMessage() ]);
+                return $response->withStatus(500)->withJson([ 'success' => false, 'error' => $e->getMessage() ]);
             }
         }
     } catch (Cartalyst\Sentinel\Checkpoints\ThrottlingException $ex) {

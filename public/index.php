@@ -29,6 +29,10 @@ require_once __DIR__.'/../app/routes_files.php';
 
 $app->add( function( $request, $response, $next ) {
     session_start();
+    if(array_key_exists('volume_id', $_SESSION)) {
+        header("X-Session-VolId: " . $_SESSION['volume_id']);
+    }
+
     return $next( $request, $response );
 });
 

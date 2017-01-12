@@ -1,9 +1,9 @@
 <?php
-namespace App\Model;
+namespace bhubr\HashBack\Model;
 use Illuminate\Database\Eloquent\Model;
 
 class Volume extends Model {
-  protected $fillable = ['name', 'mount_point', 'uuid'];
+  protected $fillable = ['name', 'mount_point', 'uuid', 'host_id'];
 
   /**
    * The volumes it has
