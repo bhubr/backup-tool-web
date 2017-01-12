@@ -15,7 +15,7 @@ $app->post('/files', function (Request $request, Response $response, $args) use 
         $file = File::create($attrs);    
     } catch(\Exception $e) {
         $errMessage = substr($e->getMessage(), 0, 3500);
-        return $response->withJson(['error' => $errMessage]);
+        return $response->withStatus(500)->withJson(['success' => false, 'error' => $errMessage]);
     }
     
     // $file=File::find(1);
